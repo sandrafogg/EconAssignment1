@@ -40,4 +40,23 @@ tuna_mod_df
   
   
 ```
+```{r}
+#For Question 1
+#In how many pixels does shark suitability exceed tuna suitability?
+
+shark_suit_df <- pixels_og_df %>% 
+  mutate("suited_to_sharks" = shark_suitability > tuna_suitability)
+shark_suit_df
+
+#shark_sum_df 
+shark_suit_ct <- shark_suit_df %>% 
+  filter(suited_to_sharks == TRUE)
+shark_suit_ct
+
+count <- count(shark_suit_ct, suited_to_sharks == TRUE)
+
+count
+#129 pixels have better suitability for sharks than for tuna. Of the pixels best suited for sharks, we would conserve the highest suitability pixels that fit within the budget
+
+```
 
