@@ -25,4 +25,19 @@ shark_og_df <- pixels_og_df %>%
 tuna_og_df <- pixels_og_df %>% 
   select(pixel, cost_of_pixel, tuna_suitability)
 ```
+```{r}
+#Arrange dataframes by cost
+shark_mod_df <- shark_og_df %>% 
+  mutate("suit_per_unit_cost" = shark_suitability/cost_of_pixel) %>% 
+  arrange(-suit_per_unit_cost)
+shark_mod_df
+
+#Arrange dataframes by cost
+tuna_mod_df <- tuna_og_df %>% 
+  mutate("suit_per_unit_cost" = tuna_suitability/cost_of_pixel) %>% 
+  arrange(-suit_per_unit_cost)
+tuna_mod_df
+  
+  
+```
 
