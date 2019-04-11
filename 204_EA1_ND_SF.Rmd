@@ -78,5 +78,7 @@ shark_suit_cost_2
 
 #129 pixels have better suitability for sharks than for tuna. Of the pixels best suited for sharks, we would conserve the highest suitability pixels that fit within the budget whose cost is less than 20 million per pixel and suitability is greater than 1.5.  The total cost is 175.7348 million. 
 
+#Now we need to figure out probability of species survival
+
 ```
 
