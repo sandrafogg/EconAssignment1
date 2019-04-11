@@ -1,0 +1,28 @@
+---
+title: "EA1_ND_SF"
+author: "Sandra Fogg"
+date: "4/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
+#Create data frames containing the original data
+pixels_og_df <- read_csv("HW1 Data.csv")
+pixels_og_df
+
+shark_og_df <- pixels_og_df %>% 
+  select(pixel, cost_of_pixel, shark_suitability)
+
+tuna_og_df <- pixels_og_df %>% 
+  select(pixel, cost_of_pixel, tuna_suitability)
+```
+
