@@ -53,10 +53,30 @@ shark_suit_ct <- shark_suit_df %>%
   filter(suited_to_sharks == TRUE)
 shark_suit_ct
 
+#How many pixels are more suited to sharks
 count <- count(shark_suit_ct, suited_to_sharks == TRUE)
 
 count
-#129 pixels have better suitability for sharks than for tuna. Of the pixels best suited for sharks, we would conserve the highest suitability pixels that fit within the budget
+
+#What is the cost of these pixels
+shark_suit_cost <- shark_suit_ct %>% 
+  summarise(
+    sum(cost_of_pixel))
+shark_suit_cost
+
+#Order in terms of suitability and remove those that cost more than 20 million per pixel and those whose suitability is less than 1.5
+shark_suit_ordered1 <-shark_suit_ct %>% 
+  arrange(-shark_suitability) %>% 
+  filter(shark_suitability > 1.5,
+         cost_of_pixel < 20.0)
+shark_suit_ordered1
+
+shark_suit_cost_2 <- shark_suit_ordered1 %>% 
+  summarise(
+    sum(cost_of_pixel))
+shark_suit_cost_2
+
+#129 pixels have better suitability for sharks than for tuna. Of the pixels best suited for sharks, we would conserve the highest suitability pixels that fit within the budget whose cost is less than 20 million per pixel and suitability is greater than 1.5.  The total cost is 175.7348 million. 
 
 ```
 
