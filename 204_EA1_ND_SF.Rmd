@@ -84,4 +84,21 @@ shark_suit_cost_2
 ##kyle created a for loop for the random number generator. new data frame, shark prob calc tuna prob calc
 
 ```
+```{r}
+#part b
+# solving the function
+#solve for a
+#find the probability of survival for both species
+
+
+#part c
+# random generator
+#generate 10 reserves
+
+#part d
+# do the same as for part a but with tuna
+
+
+#part e
+```
 
