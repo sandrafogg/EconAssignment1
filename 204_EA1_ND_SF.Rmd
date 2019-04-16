@@ -1,6 +1,6 @@
 ---
 title: "EA1_ND_SF"
-author: "Sandra Fogg"
+author: "Sandra Fogg & Natalie Dornan"
 date: "4/10/2019"
 output: html_document
 ---
@@ -10,95 +10,90 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+## Load packages
+
 library(tidyverse)
 library(dplyr)
 ```
 
 ```{r}
 #Create data frames containing the original data
-pixels_og_df <- read_csv("HW1 Data.csv")
-pixels_og_df
+og_df <- read_csv("HW1 Data.csv")
+og_df
 
-shark_og_df <- pixels_og_df %>% 
-  select(pixel, cost_of_pixel, shark_suitability)
+shark_df <- og_df %>% 
+  select(pixel, cost_of_pixel, shark_suitability, tuna_suitability)
 
-tuna_og_df <- pixels_og_df %>% 
-  select(pixel, cost_of_pixel, tuna_suitability)
+tuna_df <- og_df %>% 
+  select(pixel, cost_of_pixel, tuna_suitability, shark_suitability)
 ```
+
+
 ```{r}
-#Arrange dataframes by cost
-shark_mod_df <- shark_og_df %>% 
+
+### PART B ###
+
+#Arrange dataframes by cost to find the best suitability pixels by cost
+shark_suit_df <- shark_df %>% 
   mutate("suit_per_unit_cost" = shark_suitability/cost_of_pixel) %>% 
-  arrange(-suit_per_unit_cost)
-shark_mod_df
+  arrange(-suit_per_unit_cost) %>%
+  mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
+  filter(cum_sum <200)
 
-#Arrange dataframes by cost
-tuna_mod_df <- tuna_og_df %>% 
-  mutate("suit_per_unit_cost" = tuna_suitability/cost_of_pixel) %>% 
-  arrange(-suit_per_unit_cost)
-tuna_mod_df
-  
-  
-```
-```{r}
-#For Question 1
-#In how many pixels does shark suitability exceed tuna suitability?
-
-shark_suit_df <- pixels_og_df %>% 
-  mutate("suited_to_sharks" = shark_suitability > tuna_suitability)
 shark_suit_df
 
-#shark_sum_df 
-shark_suit_ct <- shark_suit_df %>% 
-  filter(suited_to_sharks == TRUE)
-shark_suit_ct
 
-#How many pixels are more suited to sharks
-count <- count(shark_suit_ct, suited_to_sharks == TRUE)
+##solve for alpha##
 
-count
+alpha_shark <- 1/(sum(og_df$shark_suitability)^0.6)
 
-#What is the cost of these pixels
-shark_suit_cost <- shark_suit_ct %>% 
-  summarise(
-    sum(cost_of_pixel))
-shark_suit_cost
+alpha_tuna <- 1/(sum(og_df$tuna_suitability)^0.6)
+  
+#find the probability of survival for both species even when sharks are sole concern
 
-#Order in terms of suitability and remove those that cost more than 20 million per pixel and those whose suitability is less than 1.5
-shark_suit_ordered1 <-shark_suit_ct %>% 
-  arrange(-shark_suitability) %>% 
-  filter(shark_suitability > 1.5,
-         cost_of_pixel < 20.0)
-shark_suit_ordered1
+prob_shark <- alpha_shark*(sum(shark_suit_df$shark_suitability)^0.6)
 
-shark_suit_cost_2 <- shark_suit_ordered1 %>% 
-  summarise(
-    sum(cost_of_pixel))
-shark_suit_cost_2
+prob_tuna <- alpha_tuna*(sum(shark_suit_df$tuna_suitability)^0.6)
 
-#129 pixels have better suitability for sharks than for tuna. Of the pixels best suited for sharks, we would conserve the highest suitability pixels that fit within the budget whose cost is less than 20 million per pixel and suitability is greater than 1.5.  The total cost is 175.7348 million. 
-
-#Now we need to figure out probability of species survival
-
-
-##kyle created a for loop for the random number generator. new data frame, shark prob calc tuna prob calc
 
 ```
+
+
 ```{r}
-#part b
-# solving the function
-#solve for a
-#find the probability of survival for both species
+
+### PART C ###
+
+##Tuna are sole concern
+
+#Arrange dataframes by cost
+tuna_suit_df <- tuna_df %>% 
+  mutate("suit_per_unit_cost" = tuna_suitability/cost_of_pixel) %>% 
+  arrange(-suit_per_unit_cost) %>%
+  mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
+  filter(cum_sum <200)
+
+tuna_suit_df
+
+```
 
 
-#part c
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+
+```{r}
+
+##kyle created a for loop for the random number generator. new data frame, shark prob calc tuna prob calc
 # random generator
 #generate 10 reserves
 
-#part d
-# do the same as for part a but with tuna
-
-
-#part e
 ```
+
 
