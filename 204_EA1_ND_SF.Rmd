@@ -79,20 +79,50 @@ tuna_suit_df
 
 ```{r}
 
-```
-
-
-```{r}
-
-```
-
-
-
-```{r}
+### PART D ###
+## Create 10 random reserve networks that you can afford within your budget. Show probability performance on a figure. 
 
 ##kyle created a for loop for the random number generator. new data frame, shark prob calc tuna prob calc
-# random generator
-#generate 10 reserves
+# 
+# foo = seq(1, 100, by=2)
+# 
+# foo.squared = NULL
+# 
+# for (i in 1:50 ) {
+# foo.squared[i] = foo[i]^2
+# }
+
+# tuna_suit_df <- tuna_df %>% 
+#   mutate("suit_per_unit_cost" = tuna_suitability/cost_of_pixel) %>% 
+#   arrange(-suit_per_unit_cost) %>%
+#   mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
+#   filter(cum_sum <200)
+# 
+# tuna_suit_df
+
+reserve.random = data.frame()
+rando.probs = data.frame()
+
+for (i in 1:10) {
+  reserve.random = og_df[sample(1:nrow(og_df)),] %>%
+       mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
+       filter(cum_sum <200) 
+  
+  rando.probs[i,1] = alpha_shark*(sum(reserve.random$shark_suitability)^0.6)
+  rando.probs[i,2] = alpha_tuna*(sum(reserve.random$tuna_suitability)^0.6)
+
+    }
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
 
 ```
 
