@@ -32,10 +32,10 @@ tuna_df <- og_df %>%
   select(pixel, cost_of_pixel, tuna_suitability, shark_suitability)
 ```
 
-
+Appendix I.
 ```{r}
 
-### PART B ###
+### Part B ###
 
 #Arrange dataframes by cost to find the best suitability pixels by cost
 
@@ -43,9 +43,7 @@ shark_suit_df <- shark_df %>%
   mutate("suit_per_unit_cost" = shark_suitability/cost_of_pixel) %>% 
   arrange(-suit_per_unit_cost) %>%
   mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
-  filter(cum_sum <200) %>%
-  mutate("weights" = (runif(172, 0, 1))) %>%
-  mutate("cba" = (weights*shark_suitability + (1-weights)*tuna_suitability)/cost_of_pixel)
+  filter(cum_sum <200)
 
 shark_suit_df
 
@@ -75,7 +73,7 @@ prob_tuna <- alpha_tuna*(sum(shark_suit_df$tuna_suitability)^0.6)
 
 ##Tuna are sole concern
 
-#Arrange dataframes by cost
+#Arrange dataframes by cost to find the best suitability pixels by cost
 tuna_suit_df <- tuna_df %>% 
   mutate("suit_per_unit_cost" = tuna_suitability/cost_of_pixel) %>% 
   arrange(-suit_per_unit_cost) %>%
@@ -115,7 +113,7 @@ ggplot(rando.probs, aes(V1,V2)) +
 
 ```
 
-
+Appendix II.
 ```{r}
 ggplot(rando.probs, aes(V1,V2)) +
   geom_point() +
@@ -190,7 +188,7 @@ ggplot(df, aes(V1,V2)) +
 
 ```
 
-
+Appendix III.
 ```{r}
 
 ### Frontier Curve Plot ###
