@@ -19,9 +19,9 @@ library(devtools)
 
 ```{r}
 #Create data frames containing the original data
-og_df <- read_csv("HW1 Data.csv") %>%
-    mutate("weights" = (runif(484, 0, 1))) %>%
-  mutate("cba" = (weights*shark_suitability + (1-weights)*tuna_suitability)/cost_of_pixel)
+og_df <- read_csv("HW1 Data.csv") 
+  # mutate("weights" = (runif(484, 0, 1))) %>%
+  # mutate("cba" = (weights*shark_suitability + (1-weights)*tuna_suitability)/cost_of_pixel)
 og_df
 
 
@@ -136,25 +136,58 @@ rando_probs_graph
 
 ##for loop i in whatever weights you want for a function you create for the probability calculation
 
-weight.random <- data.frame()
-survival_weight <- data.frame()
+survival <- data.frame()
 
-
-for (i in 1:10) {
-  weight.random = og_df[sample(1:nrow(og_df)),] %>%
-        mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
-        filter(cum_sum <200) 
+survival_weight <- function(w) {
   
-  survival_weight[i,1] = alpha_shark*(sum(weight.random$cba)^0.6)
-  survival_weight[i,2] = alpha_tuna*(sum(weight.random$cba)^0.6)
+  og_df$cba <- (w*og_df$shark_suitability + (1-w)*og_df$tuna_suitability)/og_df$cost_of_pixel
+  
+  x <- og_df %>%
+    arrange(desc(cba)) %>%
+    mutate(cum_sum = cumsum(cost_of_pixel)) %>%
+    filter(cum_sum <200)
+  
+  survival[1,1] <- alpha_shark*(sum(x$shark_suitability)^0.6)
+  survival[1,2] <- alpha_tuna*(sum(x$tuna_suitability)^0.6)
+  
+  return(survival)
+  
+}
 
+## for loop
+
+weights <- seq(0,1,0.01)
+
+solution <- lapply(weights, survival_weight)
+
+df <- data.frame()
+
+for (i in 1:101) {
+  df[i,1] <- solution[[i]]$V1
+  df[i,2] <- solution[[i]]$V2
 }
 
 
-weight_graph <- ggplot(survival_weight, aes(V1,V2)) +
-  geom_point()
-
-weight_graph
+# weight.random <- data.frame()
+# survival_weight <- data.frame()
+# 
+# 
+# for (i in 1:100) {
+#   weight.random = og_df[sample(1:nrow(og_df)),] %>%
+#         
+#         mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
+#         filter(cum_sum <200) 
+#   
+#   survival_weight[i,1] = alpha_shark*(sum(weight.random$cba)^0.6)
+#   survival_weight[i,2] = alpha_tuna*(sum(weight.random$cba)^0.6)
+# 
+# }
+# 
+# 
+weight_graph <- ggplot(df, aes(V1,V2)) +
+   geom_point()
+ 
+ weight_graph
 
 
 ```
