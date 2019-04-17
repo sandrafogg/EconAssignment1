@@ -19,7 +19,7 @@ library(devtools)
 
 ```{r}
 #Create data frames containing the original data
-og_df <- read_csv("HW1 Data.csv")
+og_df <- read_csv("HW1 Data.csv") 
 og_df
 
 
@@ -42,7 +42,8 @@ shark_suit_df <- shark_df %>%
   arrange(-suit_per_unit_cost) %>%
   mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
   filter(cum_sum <200) %>%
-  mutate("cba" = NULL)
+  mutate("weights" = (runif(172, 0, 1))) %>%
+  mutate("cba" = (weights*shark_suitability + (1-weights)*tuna_suitability)/cost_of_pixel)
 
 shark_suit_df
 
@@ -117,6 +118,8 @@ for (i in 1:10) {
 
 }
 
+print(sum(reserve.random$shark_suitability))
+
 rando_probs_graph <- ggplot(rando.probs, aes(V1,V2)) +
   geom_point()
 
@@ -131,21 +134,28 @@ rando_probs_graph
 
 ##for loop i in whatever weights you want for a function you create for the probability calculation
 
-weights <- data.frame(runif(172, 0, 1))
 weight.random <- data.frame()
 survival_weight <- data.frame()
 
-shark_suit_df$cba <- (weights*shark_suit_df$shark_suitability + (1-weights)*shark_suit_df$tuna_suitability)/shark_suit_df$cost_of_pixel
+# shark_suit_df$cba <- (weights*shark_suit_df$shark_suitability + (1-weights)*shark_suit_df$tuna_suitability)/shark_suit_df$cost_of_pixel
 
-for (i in 1:100) {
+for (i in 1:10) {
   weight.random = shark_suit_df[sample(1:nrow(shark_suit_df)),] %>%
-       mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
-       filter(cum_sum <200) 
+        mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
+        filter(cum_sum <200) 
   
-  survival_weight[i,1] = alpha_shark*(sum(weight.random$shark_suitability)^0.6)
-  survival_weight[i,2] = alpha_tuna*(sum(weight.random$tuna_suitability)^0.6)
+  survival_weight[i,1] = alpha_shark*(sum(weight.random$cba)^0.6)
+  survival_weight[i,2] = alpha_tuna*(sum(weight.random$cba)^0.6)
 
 }
+
+print(sum(weight.random$cba))
+
+weight_graph <- ggplot(survival_weight, aes(V1,V2)) +
+  geom_point()
+
+weight_graph
+
 
 # survival_weight <- function (probs) {
 #   
