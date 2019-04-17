@@ -111,12 +111,19 @@ for (i in 1:10) {
   rando.probs[i,1] = alpha_shark*(sum(reserve.random$shark_suitability)^0.6)
   rando.probs[i,2] = alpha_tuna*(sum(reserve.random$tuna_suitability)^0.6)
 
-    }
+}
+
+rando_probs_graph <- ggplot(rando.probs) %>%
+  geom_point(x = V1, y = V2)
+
+
 
 ```
 
 
 ```{r}
+
+##for loop i in whatever weights you want for a function you create for the probability calculation
 
 ```
 
