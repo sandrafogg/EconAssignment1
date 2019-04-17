@@ -21,6 +21,7 @@ library(dplyr)
 og_df <- read_csv("HW1 Data.csv")
 og_df
 
+
 shark_df <- og_df %>% 
   select(pixel, cost_of_pixel, shark_suitability, tuna_suitability)
 
@@ -34,6 +35,7 @@ tuna_df <- og_df %>%
 ### PART B ###
 
 #Arrange dataframes by cost to find the best suitability pixels by cost
+
 shark_suit_df <- shark_df %>% 
   mutate("suit_per_unit_cost" = shark_suitability/cost_of_pixel) %>% 
   arrange(-suit_per_unit_cost) %>%
@@ -113,17 +115,46 @@ for (i in 1:10) {
 
 }
 
-rando_probs_graph <- ggplot(rando.probs) %>%
-  geom_point(x = V1, y = V2)
+rando_probs_graph <- ggplot(rando.probs, aes(V1,V2)) +
+  geom_point()
 
-
+rando_probs_graph
 
 ```
 
 
 ```{r}
 
+### PART E ###
+
 ##for loop i in whatever weights you want for a function you create for the probability calculation
+
+survival_weight <- function(w) {
+  
+  shark_suit_df$cba <- (w*shark_suit_df$shark_suitability + (1-w)*shark_suit_df$tuna_suitability)/shark_df$cost_of_pixel
+  
+  x <- shark_df %>%
+    arrange(desc(cba)) %>%
+    mutate(cum_sum = cum_sum(cost_of_pixel)) %>%
+    filter(cum_sum <200)
+  
+  survival[1,1] <- alpha_shark*(sum(x$shark_suitability)^0.6)
+  survival[1,2] <- alpha_tuna*(sum(x$tuna_suitability)^0.6)
+  
+  return(survival)
+}
+
+##for loop
+
+weights <- seq(0,1,0.1)
+
+solution <- lapply(weights, survival_weight)
+
+
+df <- data.frame()
+for (i in 1:length(solution)) {
+  df[i,1:2] <-solution[[i]]
+}
 
 ```
 
