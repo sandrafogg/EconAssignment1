@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(dplyr)
+library(devtools)
 ```
 
 ```{r}
@@ -130,36 +131,49 @@ rando_probs_graph
 
 ##for loop i in whatever weights you want for a function you create for the probability calculation
 
-survival_weight <- function(w) {
+weights <- data.frame(runif(172, 0, 1))
+weight.random <- data.frame()
+survival_weight <- data.frame()
+
+shark_suit_df$cba <- (weights*shark_suit_df$shark_suitability + (1-weights)*shark_suit_df$tuna_suitability)/shark_suit_df$cost_of_pixel
+
+for (i in 1:100) {
+  weight.random = shark_suit_df[sample(1:nrow(shark_suit_df)),] %>%
+       mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
+       filter(cum_sum <200) 
   
-  shark_suit_df$cba <- (w*shark_suit_df$shark_suitability + (1-w)*shark_suit_df$tuna_suitability)/shark_suit_df$cost_of_pixel
-  
-  x <- shark_df %>%
-    arrange(desc(cba)) %>%
-    mutate(cum_sum = cum_sum(cost_of_pixel)) %>%
-    filter(cum_sum <200)
-  
-  survival[1,1] <- alpha_shark*(sum(x$shark_suitability)^0.6)
-  survival[1,2] <- alpha_tuna*(sum(x$tuna_suitability)^0.6)
-  
-  return(survival)
+  survival_weight[i,1] = alpha_shark*(sum(weight.random$shark_suitability)^0.6)
+  survival_weight[i,2] = alpha_tuna*(sum(weight.random$tuna_suitability)^0.6)
+
 }
 
-##for loop
+# survival_weight <- function (probs) {
+#   
+#   shark_suit_df$cba <- (probs*shark_suit_df$shark_suitability + (1-probs)*shark_suit_df$tuna_suitability)/shark_suit_df$cost_of_pixel
+#   
+#   x <- shark_suit_df %>%
+#     arrange(-cba) %>%
+#     mutate(cum_sum = cumsum(cost_of_pixel)) %>%
+#     filter(cum_sum <200)
+#   
+#   survival[1,1] <- alpha_shark*(sum(x$shark_suitability)^0.6)
+#   survival[1,2] <- alpha_tuna*(sum(x$tuna_suitability)^0.6)
+#   
+#   return(survival)
+# }
 
-w <- seq(0,1,0.1)
+# ##for loop
+# 
+# weight <- seq(0,1,0.01)
+# 
+# solution <- lapply(weight, survival_weight)
+# 
+# df <- data.frame()
+# for (i in 1:length(solution)) {
+#   df[i,1:2] <- solution[[i]]
+# }
 
-for (i in w) {
-  x <- survival_weight(i)
-}
 
-solution <- lapply(w, survival_weight)
-
-
-df <- data.frame()
-for (i in 1:length(solution)) {
-  df[i,1:2] <-solution[[i]]
-}
 
 ```
 
