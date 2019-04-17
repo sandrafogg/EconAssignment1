@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, include=FALSE}
 ## Load packages
 
 library(tidyverse)
@@ -17,7 +17,7 @@ library(dplyr)
 library(devtools)
 ```
 
-```{r}
+```{r, include=FALSE}
 #Create data frames containing the original data
 og_df <- read_csv("HW1 Data.csv") 
   # mutate("weights" = (runif(484, 0, 1))) %>%
@@ -49,19 +49,22 @@ shark_suit_df <- shark_df %>%
 
 shark_suit_df
 
+```
+
+```{r, include=FALSE}
 
 ##solve for alpha##
 
 alpha_shark <- 1/(sum(og_df$shark_suitability)^0.6)
 
 alpha_tuna <- 1/(sum(og_df$tuna_suitability)^0.6)
-  
+
 #find the probability of survival for both species even when sharks are sole concern
 
 prob_shark <- alpha_shark*(sum(shark_suit_df$shark_suitability)^0.6)
 
-prob_tuna <- alpha_tuna*(sum(shark_suit_df$tuna_suitability)^0.6)
 
+prob_tuna <- alpha_tuna*(sum(shark_suit_df$tuna_suitability)^0.6)
 
 ```
 
@@ -84,28 +87,10 @@ tuna_suit_df
 ```
 
 
-```{r}
+```{r, include=FALSE}
 
 ### PART D ###
 ## Create 10 random reserve networks that you can afford within your budget. Show probability performance on a figure. 
-
-##kyle created a for loop for the random number generator. new data frame, shark prob calc tuna prob calc
-# 
-# foo = seq(1, 100, by=2)
-# 
-# foo.squared = NULL
-# 
-# for (i in 1:50 ) {
-# foo.squared[i] = foo[i]^2
-# }
-
-# tuna_suit_df <- tuna_df %>% 
-#   mutate("suit_per_unit_cost" = tuna_suitability/cost_of_pixel) %>% 
-#   arrange(-suit_per_unit_cost) %>%
-#   mutate("cum_sum" = cumsum(cost_of_pixel)) %>%
-#   filter(cum_sum <200)
-# 
-# tuna_suit_df
 
 reserve.random = data.frame()
 rando.probs = data.frame()
@@ -122,15 +107,24 @@ for (i in 1:10) {
 
 print(sum(reserve.random$shark_suitability))
 
-rando_probs_graph <- ggplot(rando.probs, aes(V1,V2)) +
-  geom_point()
+ggplot(rando.probs, aes(V1,V2)) +
+  geom_point() +
+  theme_bw() +
+  labs(x = "Shark Survival Probability", y = "Tuna Survival Probablility", title = "Shark vs. Tuna Survival Probabilities for 10 Random Reserves")
 
-rando_probs_graph
 
 ```
 
 
 ```{r}
+ggplot(rando.probs, aes(V1,V2)) +
+  geom_point() +
+  theme_bw() +
+  labs(x = "Shark Survival Probability", y = "Tuna Survival Probablility", title = "Shark vs. Tuna Survival Probabilities for 10 Random Reserves")
+```
+
+
+```{r, include=FALSE}
 
 ### PART E ###
 
@@ -184,10 +178,14 @@ for (i in 1:101) {
 # }
 # 
 # 
-weight_graph <- ggplot(df, aes(V1,V2)) +
-   geom_point()
+ggplot(df, aes(V1,V2)) +
+  geom_point() +
+  geom_smooth(method = "auto", se = FALSE) +
+  theme_bw() +
+  labs(x = "Shark Survival Probability", y = "Tuna Survival Probablility", title = "Shark vs. Tuna Efficiency Frontier Curve")
+
  
- weight_graph
+
 
 
 ```
@@ -195,6 +193,13 @@ weight_graph <- ggplot(df, aes(V1,V2)) +
 
 ```{r}
 
+### Frontier Curve Plot ###
+
+ggplot(df, aes(V1,V2)) +
+  geom_point() +
+  geom_smooth(method = "auto", se = FALSE) +
+  theme_bw() +
+  labs(x = "Shark Survival Probability", y = "Tuna Survival Probablility", title = "Shark vs. Tuna Efficiency Frontier Curve")
 
 ```
 
